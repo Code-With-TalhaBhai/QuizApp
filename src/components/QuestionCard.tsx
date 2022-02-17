@@ -1,16 +1,18 @@
 import React from 'react'
+import {AnswerObject} from '../API'
 
 type Props = {
     question: string;
     answers: string[];
-    callback: any;
+    callback: (e: React.MouseEvent<HTMLButtonElement>) => void;
     // userAnswer: string;
-    userAnswer: any;
+    userAnswer: AnswerObject | undefined;
     questionNr: number;
     totalQuestions: number;
 }
 
 function QuestionCard({question,answers,callback,userAnswer,questionNr,totalQuestions}: Props) {
+    // console.log(userAnswer)
   return (
     <div>
         <p className="number">
@@ -19,9 +21,10 @@ function QuestionCard({question,answers,callback,userAnswer,questionNr,totalQues
         <p dangerouslySetInnerHTML={{__html:question }}/>
         <div>
             {answers.map(answer=>{
-                <div>
-                    <button disabled={userAnswer} onClick={callback}/>
-                    <span dangerouslySetInnerHTML={{__html:answer}}/>
+                return <div key={answer}>
+                    <button value={answer} disabled={userAnswer?true:false} onClick={callback}>
+                    <span dangerouslySetInnerHTML={{__html: answer}}/>
+                    </button>
                 </div>
             })}
         </div>

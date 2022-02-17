@@ -27,9 +27,30 @@ function App() {
         setLoading(false)
       }
       console.log(questions)
-      const checkAnswer = () => {}
+      const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if(!gameOver){
+          // Getting user answer value
+          const answer = e.currentTarget.value
+          // Check answer boolean
+          const correct = questions[number].correct_answer === answer;
+          const answerObject = {
+            question: questions[number].question,
+            answer,
+            correct,
+            correctAnswer: questions[number].correct_answer
+          }
+          setUserAnswers((prev)=>[...prev,answerObject])
+          console.log(userAnswers)
+        }
+      }
       const nextQuestion = ()=> {
-        setNumber(number+1)
+        const nextQuestion = number+1;
+
+        if(nextQuestion === TotalQuestions()){
+          setGameOver(true)
+        }else{
+          setNumber(nextQuestion)
+        }
       }
       // console.log(fetchQuizQuestions(TotalQuestions(),Difficulty.MEDIUM))
 
@@ -53,7 +74,9 @@ function App() {
       />
       )
       }
+        {!gameOver && !loading && number !== TotalQuestions()-1 && userAnswers.length === number+1 ?(
       <button className="next" onClick={nextQuestion}>Next Question</button>
+        ):null}
     </div>
   );
 }
