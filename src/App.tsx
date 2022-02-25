@@ -5,7 +5,7 @@ import QuestionCard from './components/QuestionCard';
 import { Difficulty, fetchQuizQuestions, QuestionState, AnswerObject } from './API';
 
 function App() {
-     const [loading, setLoading] = useState(false)
+     const [loading, setLoading] = useState(false);
      const [questions, setQuestions] = useState<QuestionState[]>([])
      const [number, setNumber] = useState(0)
      const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([])
@@ -40,12 +40,14 @@ function App() {
             correctAnswer: questions[number].correct_answer
           }
           setUserAnswers((prev)=>[...prev,answerObject])
+          if(correct){
+            setScore((prev)=>prev+1)
+          }
           console.log(userAnswers)
         }
       }
       const nextQuestion = ()=> {
         const nextQuestion = number+1;
-
         if(nextQuestion === TotalQuestions()){
           setGameOver(true)
         }else{
@@ -61,7 +63,7 @@ function App() {
       <button className='start' onClick={startTrivia}>Start</button>)
       :null
       }
-      {!gameOver?(<p className='score'>Score:</p>):null}
+      {!gameOver?(<p className='score'>Score:{score}</p>):null}
       {loading?(<p>Loading Questions ...</p>):null}
       {!loading && !gameOver &&(
       <QuestionCard
