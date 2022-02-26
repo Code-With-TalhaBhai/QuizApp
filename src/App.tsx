@@ -6,9 +6,11 @@ import { fetchQuizQuestions, QuestionState, AnswerObject } from './API';
 
 function App() {
       // const [choice, setChoice] = useState<userQuery[]>([]);
-    const [category, setCategory] = useState({catVal:'All Categories'})
+    const [category, setCategory] = useState('');
+    const [startBtn, setStartBtn] = useState(true);
+    const [stBtn,setStBtn] = useState(false)
     const [totalQA, setTotalQA] = useState(10);
-    const [difficulty, setDifficulty] = useState('');
+    const [difficulty, setDifficulty] = useState('easy');
     const  [form, setForm] = useState(false);
      const [loading, setLoading] = useState(false);
      const [questions, setQuestions] = useState<QuestionState[]>([])
@@ -24,7 +26,7 @@ function App() {
      ]
 
      const categories = [
-       {label:'All Categories',value:'9'},
+       {label:'All Categories',value:''},
        {label:'General Knowledge',value:'10'},
        {label:'Entertainment: Books',value:'11'},
        {label:'Entertainment: Film',value:'12'},
@@ -57,19 +59,24 @@ function App() {
       }
 
       const startForm = () => {
-        setForm(true)
+        setForm(true);
+        setStartBtn(false);
+        setStBtn(!stBtn)
+        // setGameOver(false);
+        setUserAnswers([]);
       }
 
       const startTrivia = async () => {
         setLoading(true);
         setForm(false);
         setGameOver(false);
-        const newQuestions = await fetchQuizQuestions(difficulty,category.catVal,TotalQuestions())
+        const newQuestions = await fetchQuizQuestions(difficulty,category,TotalQuestions())
         setQuestions(newQuestions)
         setScore(0)
-        setUserAnswers([]);
+        // setUserAnswers([]);
         setNumber(0);
         setLoading(false);
+        // setForm(true)
       }
 
 
@@ -106,7 +113,12 @@ function App() {
   return (
     <div className="App">
       <h1>REACT QUIZ BY TALHA</h1>
-      {gameOver || userAnswers.length === TotalQuestions()?(
+      {/* {gameOver || userAnswers.length === TotalQuestions()?( */}
+      {/* {!form || userAnswers.length === TotalQuestions()?( */}
+      {/* {(startBtn && userAnswers.length === TotalQuestions()) || userAnswers.length <= 0 ?( */}
+      {/* {startBtn || userAnswers.length === TotalQuestions()?( */}
+      {/* {(userAnswers.length === TotalQuestions() && stBtn) || startBtn?( */}
+      {userAnswers.length === TotalQuestions() || startBtn?(
       <button className='start' onClick={startForm}>Start</button>)
       :null
       }
@@ -114,16 +126,17 @@ function App() {
       {/* {gameOver || userAnswers.length === TotalQuestions()? */}
       {form?
       <form className="queries" onSubmit={startTrivia}>
+      {/* // <form className="queries"> */}
       <h3>Number of Questions:</h3>
       <input type="number" name='numQuestions' className='inputquery' onChange={(e)=>setTotalQA(parseInt(e.target.value))} value={totalQA} min={1} max={50} required/>
       <h3>Select Category:</h3>
-      <select id="categories" name="categories" className='inputquery' value={category.catVal} onChange={(e)=>{setCategory({catVal:e.target.value})}}>
+      <select id="categories" name="categories" className='inputquery' value={category} onChange={(e)=>{setCategory(e.target.value)}}>
         {categories.map((element,index)=>(
         <option value={(Number(element.value)-1).toString()}>{element.label}</option>
         ))}
       </select>
       <h3>Select Difficulty:</h3>
-      <select id="difficulty" name="difficulty" className='inputquery' onChange={(e)=>setDifficulty(e.target.value)}>
+      <select id="difficulty" name="difficulty" className='inputquery' value={difficulty} onChange={(e)=>setDifficulty(e.target.value)}>
         {difficult.map((element,index)=>(
         <option value={element.valued}>{element.label}</option>
         ))}
@@ -136,9 +149,9 @@ function App() {
       }
       </form>:null}
 
-      {!gameOver?(<p className='score'>Score:{score}</p>):null}
+      {!form && !gameOver?(<p className='score'>Score:{score}</p>):null}
       {loading?(<p>Loading Questions ...</p>):null}
-      {!loading && !gameOver &&(
+      {!form && !loading && !gameOver &&(
       <QuestionCard
       question={questions[number].question}
       answers={questions[number].answers}
@@ -149,7 +162,7 @@ function App() {
       />
       )
       }
-        {!gameOver && !loading && number !== TotalQuestions()-1 && userAnswers.length === number+1 ?(
+        {!form && !gameOver && !loading && number !== TotalQuestions()-1 && userAnswers.length === number+1 ?(
       <button className="next" onClick={nextQuestion}>Next Question</button>
         ):null}
     </div>
