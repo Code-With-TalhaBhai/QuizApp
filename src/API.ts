@@ -24,14 +24,23 @@ export enum Difficulty {
     HARD = "hard",
 }
 
-export enum Category {
-    AnyCat= 9,GenKnow,Books,Film,Music,Theatre,TV,Bgame,SciNat,SciCom,SciMath,Sports,GeoGraphy,History,Politics,Art,Celebrities,Animals,Vehicles,Comics,Gadgets,JapAnima,Catoon
-}
+// export enum Category {
+//     AnyCat= 9,GenKnow,Books,Film,Music,Theatre,TV,Bgame,SciNat,SciCom,SciMath,Sports,GeoGraphy,History,Politics,Art,Celebrities,Animals,Vehicles,Comics,Gadgets,JapAnima,Catoon
+// }
+
+
+// export type userQuery = {
+//     difficulty: string,
+//     Category: string,
+//     numQuestions: number
+// }
 
 // enum Category
 
-export const fetchQuizQuestions = async(amount:number, difficulty:Difficulty)=>{
-    const endpoint = `https://opentdb.com/api.php?amount=${amount}&category=9&difficulty=${difficulty}&type=multiple`
+// export const fetchQuizQuestions = async(amount:number, difficulty:Difficulty)=>{
+// export const fetchQuizQuestions = async({difficulty,Category,numQuestions}:userQuery)=>{
+export const fetchQuizQuestions = async(difficulty:string,Category:string,numQuestions:number)=>{
+    const endpoint = `https://opentdb.com/api.php?amount=${numQuestions}&category=${Category}&difficulty=${difficulty}&type=multiple`
     const data = await (await fetch(endpoint)).json()
     // console.log(data)
     return data.results.map((question:Question)=>(

@@ -2,30 +2,77 @@ import React,{useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import QuestionCard from './components/QuestionCard';
-import { Difficulty, fetchQuizQuestions, QuestionState, AnswerObject } from './API';
+import { fetchQuizQuestions, QuestionState, AnswerObject } from './API';
 
 function App() {
+      // const [choice, setChoice] = useState<userQuery[]>([]);
+    const [category, setCategory] = useState({catVal:'All Categories'})
+    const [totalQA, setTotalQA] = useState(10);
+    const [difficulty, setDifficulty] = useState('');
+    const  [form, setForm] = useState(false);
      const [loading, setLoading] = useState(false);
      const [questions, setQuestions] = useState<QuestionState[]>([])
      const [number, setNumber] = useState(0)
      const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([])
      const [score, setScore] = useState(0)
-     const [gameOver, setGameOver] = useState(true)
+     const [gameOver, setGameOver] = useState(true);
 
-     
+     const difficult = [
+      {label:'Easy',valued:'easy'},
+      {label:'Medium',valued:'medium'},
+      {label:'Hard',valued:'hard'}
+     ]
+
+     const categories = [
+       {label:'All Categories',value:'9'},
+       {label:'General Knowledge',value:'10'},
+       {label:'Entertainment: Books',value:'11'},
+       {label:'Entertainment: Film',value:'12'},
+       {label:'Entertainment: Music',value:'12'},
+       {label:'Entertainment: Musical & Theaters',value:'12'},
+       {label:'Entertainment: Television',value:'15'},
+       {label:'Entertainment: Video Games',value:'16'},
+       {label:'Entertainment: Board Games',value:'17'},
+       {label:'Science & Nature',value:'18'},
+       {label:'Science: Computer',value:'19'},
+       {label:'Science: Mathematics',value:'20'},
+       {label:'Mythology',value:'21'},
+       {label:'Sports',value:'22'},
+       {label:'Geography',value:'23'},
+       {label:'History',value:'24'},
+       {label:'Politics',value:'25'},
+       {label:'Art',value:'26'},
+       {label:'Celebrities',value:'27'},
+       {label:'Animals',value:'28'},
+       {label:'Vehicles',value:'29'},
+       {label:'Entertainment: Comics',value:'30'},
+       {label:'Science: Gadgets',value:'31'},
+       {label:'Entertainment: Japanese Anime & Manga',value:'32'},
+       {label:'Entertainment: Cartoon & Animations',value:'33'}
+     ]
+
+
      const TotalQuestions = ()=>{
-       return 10
+       return totalQA
       }
+
+      const startForm = () => {
+        setForm(true)
+      }
+
       const startTrivia = async () => {
         setLoading(true);
+        setForm(false);
         setGameOver(false);
-        const newQuestions = await fetchQuizQuestions(TotalQuestions(),Difficulty.MEDIUM)
+        const newQuestions = await fetchQuizQuestions(difficulty,category.catVal,TotalQuestions())
         setQuestions(newQuestions)
         setScore(0)
         setUserAnswers([]);
         setNumber(0);
-        setLoading(false)
+        setLoading(false);
       }
+
+
       console.log(questions)
       const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
         if(!gameOver){
@@ -58,11 +105,37 @@ function App() {
 
   return (
     <div className="App">
-      <h1>REACT QUIZ</h1>
+      <h1>REACT QUIZ BY TALHA</h1>
       {gameOver || userAnswers.length === TotalQuestions()?(
-      <button className='start' onClick={startTrivia}>Start</button>)
+      <button className='start' onClick={startForm}>Start</button>)
       :null
       }
+
+      {/* {gameOver || userAnswers.length === TotalQuestions()? */}
+      {form?
+      <form className="queries" onSubmit={startTrivia}>
+      <h3>Number of Questions:</h3>
+      <input type="number" name='numQuestions' className='inputquery' onChange={(e)=>setTotalQA(parseInt(e.target.value))} value={totalQA} min={1} max={50} required/>
+      <h3>Select Category:</h3>
+      <select id="categories" name="categories" className='inputquery' value={category.catVal} onChange={(e)=>{setCategory({catVal:e.target.value})}}>
+        {categories.map((element,index)=>(
+        <option value={(Number(element.value)-1).toString()}>{element.label}</option>
+        ))}
+      </select>
+      <h3>Select Difficulty:</h3>
+      <select id="difficulty" name="difficulty" className='inputquery' onChange={(e)=>setDifficulty(e.target.value)}>
+        {difficult.map((element,index)=>(
+        <option value={element.valued}>{element.label}</option>
+        ))}
+      </select>
+      {/* <button className="user" onClick={nextQuestion}>Submit</button> */}
+      {
+      // gameOver || userAnswers.length === TotalQuestions()?(
+      <button type='submit' className='start'>Start Now</button>
+      // ):null
+      }
+      </form>:null}
+
       {!gameOver?(<p className='score'>Score:{score}</p>):null}
       {loading?(<p>Loading Questions ...</p>):null}
       {!loading && !gameOver &&(

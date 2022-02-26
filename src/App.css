@@ -29,6 +29,24 @@ h1{
   margin: 20px;
 }
 
+.queries{
+  /* border: 2px solid black; */
+  margin: 20px;
+}
+.inputquery{
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+h3{
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: left;
+}
+
 .start,.next{
   cursor:pointer;
   background: linear-gradient(180deg, #fff, #ffcc91);
