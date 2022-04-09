@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import QuestionCard from './components/QuestionCard';
 import { fetchQuizQuestions, QuestionState, AnswerObject } from './API';
+// import {sound1} from './music/3W6P7VF-game-reward.mp3';
+import ReactAudioPlayer from 'react-audio-player';
 
 function App() {
       // const [choice, setChoice] = useState<userQuery[]>([]);
@@ -18,6 +20,9 @@ function App() {
      const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([])
      const [score, setScore] = useState(0)
      const [gameOver, setGameOver] = useState(true);
+     const [audio1,setAudio1] = useState(new Audio('./music/3W6P7VF-game-reward.mp3'));
+      // const audio1 = new Audio(sound1);
+     const audio2 = new Audio('./music/mixkit-extra-bonus-in-a-video-game-2045.wav');
 
      const difficult = [
       {label:'Easy',valued:'easy'},
@@ -64,6 +69,7 @@ function App() {
         setStBtn(!stBtn)
         // setGameOver(false);
         setUserAnswers([]);
+        audio1.play()
       }
 
       const startTrivia = async () => {
@@ -113,13 +119,10 @@ function App() {
   return (
     <div className="App">
       <h1>REACT QUIZ BY TALHA</h1>
-      {/* {gameOver || userAnswers.length === TotalQuestions()?( */}
-      {/* {!form || userAnswers.length === TotalQuestions()?( */}
-      {/* {(startBtn && userAnswers.length === TotalQuestions()) || userAnswers.length <= 0 ?( */}
-      {/* {startBtn || userAnswers.length === TotalQuestions()?( */}
-      {/* {(userAnswers.length === TotalQuestions() && stBtn) || startBtn?( */}
       {userAnswers.length === TotalQuestions() || startBtn?(
-      <button className='start' onClick={startForm}>Start</button>)
+      <button className='start' onClick={startForm}>Start</button>
+      // <button className='start' onClick={()=>audio1.play()}>Start</button>
+      )
       :null
       }
 
